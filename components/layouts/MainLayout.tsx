@@ -81,6 +81,7 @@ export const MainLayout: FC<Props> = ({ children, title, description }) => {
                                 paddingTop: 2,
                                 paddingLeft: { xs: 1, sm: 5 },
                                 paddingRight: { xs: 1, sm: 5 },
+                                flexDirection: 'column',
                             }}>
                             {children}
                         </Box>
