@@ -1,6 +1,12 @@
 import { FC } from 'react'
 import { Box } from '@mui/material'
 import { useTable } from 'react-table'
+import MaUTable from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 
 interface IColumn {
     Header: string
@@ -19,45 +25,60 @@ export const Table: FC<Props> = ({ data, columns }) => {
         tableInstance
 
     return (
-        <table {...getTableProps()}>
-            <thead>
+        <MaUTable {...getTableProps()}>
+            <TableHead>
                 {headerGroups.map((headerGroup) => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
+                    <TableRow {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map((column) => (
-                            <th {...column.getHeaderProps()}>
+                            <TableCell {...column.getHeaderProps()}>
                                 {column.render('Header')}
-                            </th>
+                            </TableCell>
                         ))}
-                    </tr>
+                    </TableRow>
                 ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
+            </TableHead>
+            <TableBody {...getTableBodyProps()}>
                 {rows.map((row) => {
                     prepareRow(row)
                     return (
-                        <tr {...row.getRowProps()}>
+                        <TableRow {...row.getRowProps()}>
                             {row.cells.map((cell) => {
                                 if (cell.column.id === 'picture') {
                                     return (
-                                        <td {...cell.getCellProps()}>
-                                            <img
-                                                src={cell.value}
-                                                alt="Imagen"
-                                            />
-                                        </td>
+                                        <TableCell {...cell.getCellProps()}>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    backgroundColor: '#F0EFF0',
+                                                    borderRadius: 10,
+                                                    height: 60,
+                                                    width: 60,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }}>
+                                                <img
+                                                    src={cell.value}
+                                                    alt="Imagen"
+                                                    style={{
+                                                        height: 50,
+                                                        width: 50,
+                                                    }}
+                                                />
+                                            </div>
+                                        </TableCell>
                                     )
                                 } else {
                                     return (
-                                        <td {...cell.getCellProps()}>
+                                        <TableCell {...cell.getCellProps()}>
                                             {cell.render('Cell')}
-                                        </td>
+                                        </TableCell>
                                     )
                                 }
                             })}
-                        </tr>
+                        </TableRow>
                     )
                 })}
-            </tbody>
-        </table>
+            </TableBody>
+        </MaUTable>
     )
 }
