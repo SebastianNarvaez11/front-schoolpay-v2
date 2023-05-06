@@ -6,11 +6,14 @@ import AddIcon from '@mui/icons-material/AddRounded'
 import { ModalCreateTenant } from '@/components/root'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getAllTenants } from '@/store/thunks/tenantThunk'
-import { Table } from '@/components/ui'
+import { Loader, Table } from '@/components/ui'
+import { MoonLoader } from 'react-spinners'
 
 export const TenantsPage: NextPage = () => {
     const dispatch = useAppDispatch()
-    const { tenants } = useAppSelector((state) => state.tenant)
+    const { tenants, isLoadindTenants } = useAppSelector(
+        (state) => state.tenant,
+    )
     const [showModalCreateTenant, setShowModalCreateTenant] = useState(false)
 
     useEffect(() => {
@@ -39,7 +42,11 @@ export const TenantsPage: NextPage = () => {
             </Box>
 
             <Box>
-                <Table data={tenants} columns={columns} />
+                {isLoadindTenants ? (
+                    <Loader title='Cargando Tenants' subtitle='Esto puede tardar un poco ...' size={50}/>
+                ) : (
+                    <Table data={tenants} columns={columns} />
+                )}
             </Box>
 
             <ModalCreateTenant

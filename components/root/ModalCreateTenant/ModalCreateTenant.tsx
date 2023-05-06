@@ -3,7 +3,7 @@ import { Box, Modal, SxProps, Typography } from '@mui/material'
 import BusinessIcon from '@mui/icons-material/BusinessRounded'
 import LanguageIcon from '@mui/icons-material/LanguageRounded'
 import AdminUserIcon from '@mui/icons-material/AdminPanelSettingsRounded'
-import { Stepper } from '../../ui'
+import { Loader, Stepper } from '../../ui'
 import { FormStepOne } from './FormStepOne'
 import { IFormOne, IFormThree, IFormTwo } from './forms.interfaces'
 import { FormStepTwo } from './FormStepTwo'
@@ -100,33 +100,11 @@ export const ModalCreateTenant: FC<Props> = ({ isVisible, setIsVisible }) => {
         <Modal open={isVisible} onClose={onCloseModal}>
             <Box sx={style}>
                 {isCreatingTenant ? (
-                    <Box
-                        display="flex"
-                        sx={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            height: 630,
-                        }}>
-                        <MoonLoader color="#5257F2" size={100}/>
-                        <Typography
-                            sx={{
-                                color: '#3C3B4E',
-                                fontSize: 30,
-                                fontWeight: 700,
-                                mt: 2,
-                            }}>
-                            Estamos creando el tenant
-                        </Typography>
-                        <Typography
-                            sx={{
-                                color: '#3C3B4E',
-                                fontSize: 20,
-                                fontWeight: 700,
-                            }}>
-                            Esto puede tardar un momento
-                        </Typography>
-                    </Box>
+                    <Loader
+                        title="Estamos creando el tenant"
+                        subtitle="Esto puede tardar un poco ..."
+                        height={630}
+                    />
                 ) : (
                     <>
                         <Box sx={{ pt: 4, pl: 4, pr: 4, pb: 2 }}>

@@ -1,7 +1,7 @@
 import { backendApi } from '@/apis/backendApi'
 import { AppDispatch } from '../store'
 import Cookies from 'js-cookie'
-import { set_is_creating_tenant, set_tenants } from '../slices/tenanSlice'
+import { set_is_creating_tenant, set_is_loading_tenant, set_tenants } from '../slices/tenanSlice'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 
@@ -30,12 +30,15 @@ export const createTenant =
     }
 
 export const getAllTenants = () => async (dispatch: AppDispatch) => {
+    dispatch(set_is_loading_tenant(true))
     try {
         const { data } = await backendApi.get('/tenat', {
             headers: { 'x-token': token },
         })
         dispatch(set_tenants(data.tenats))
+        dispatch(set_is_loading_tenant(false))
     } catch (error) {
         console.log(error)
+        dispatch(set_is_loading_tenant(false))
     }
 }

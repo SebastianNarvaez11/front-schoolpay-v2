@@ -3,12 +3,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface IStateTenant {
     isCreatingTenant: boolean
+    isLoadindTenants: boolean
     tenants: ITenant[]
 }
 
 const initialState: IStateTenant = {
     isCreatingTenant: false,
     tenants: [],
+    isLoadindTenants: false,
 }
 
 export const tenantSlice = createSlice({
@@ -22,8 +24,13 @@ export const tenantSlice = createSlice({
         set_is_creating_tenant: (state, action: PayloadAction<boolean>) => {
             state.isCreatingTenant = action.payload
         },
+
+        set_is_loading_tenant: (state, action: PayloadAction<boolean>) => {
+            state.isLoadindTenants = action.payload
+        },
     },
 })
 
-export const { set_is_creating_tenant, set_tenants} = tenantSlice.actions
+export const { set_is_creating_tenant, set_tenants, set_is_loading_tenant } =
+    tenantSlice.actions
 export default tenantSlice.reducer

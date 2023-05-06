@@ -45,7 +45,13 @@ export const Table: FC<Props> = ({ data, columns }) => {
                             {row.cells.map((cell) => {
                                 if (cell.column.id === 'picture') {
                                     return (
-                                        <TableCell {...cell.getCellProps()}>
+                                        <TableCell
+                                            {...cell.getCellProps()}
+                                            sx={{
+                                                border: 0,
+                                                padding: 0,
+                                                paddingBottom: 1,
+                                            }}>
                                             <div
                                                 style={{
                                                     display: 'flex',
@@ -69,7 +75,9 @@ export const Table: FC<Props> = ({ data, columns }) => {
                                     )
                                 } else {
                                     return (
-                                        <TableCell {...cell.getCellProps()}>
+                                        <TableCell
+                                            {...cell.getCellProps()}
+                                            sx={{ border: 0, padding: 0 }}>
                                             {cell.render('Cell')}
                                         </TableCell>
                                     )
