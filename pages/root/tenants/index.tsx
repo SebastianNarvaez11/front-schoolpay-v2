@@ -11,7 +11,7 @@ import { MoonLoader } from 'react-spinners'
 
 export const TenantsPage: NextPage = () => {
     const dispatch = useAppDispatch()
-    const { tenants, isLoadindTenants } = useAppSelector(
+    const { tenants, isLoadingTenants } = useAppSelector(
         (state) => state.tenant,
     )
     const [showModalCreateTenant, setShowModalCreateTenant] = useState(false)
@@ -42,7 +42,7 @@ export const TenantsPage: NextPage = () => {
             </Box>
 
             <Box>
-                {isLoadindTenants ? (
+                {isLoadingTenants ? (
                     <Loader title='Cargando Tenants' subtitle='Esto puede tardar un poco ...' size={50}/>
                 ) : (
                     <Table data={tenants} columns={columns} />

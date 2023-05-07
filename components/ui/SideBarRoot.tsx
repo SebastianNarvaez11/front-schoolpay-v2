@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, IconButton } from '@mui/material'
 import BusinessIcon from '@mui/icons-material/BusinessRounded'
 import HomeIcon from '@mui/icons-material/HomeRounded'
+import UserIcon from '@mui/icons-material/AdminPanelSettingsRounded'
 import { useRouter } from 'next/router'
 import { useAppSelector } from '@/store/hooks'
 import Link from 'next/link'
@@ -41,6 +42,18 @@ export const SideBarRoot = () => {
                         marginTop: 1,
                     }}>
                     <BusinessIcon fontSize="large" />
+                </IconButton>
+            </Link>
+
+            <Link href={'/root/users'}>
+                <IconButton
+                    aria-label="Usuarios"
+                    sx={{
+                        color: asPath === '/root/users' ? '#fff' : '#7478f5',
+                        width: 50,
+                        marginTop: 1,
+                    }}>
+                    <UserIcon fontSize="large" />
                 </IconButton>
             </Link>
         </Box>
