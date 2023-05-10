@@ -25,7 +25,7 @@ export const Table: FC<Props> = ({ data, columns }) => {
         tableInstance
 
     return (
-        <MaUTable {...getTableProps()}>
+        <MaUTable {...getTableProps()} sx={{borderCollapse: 'collapse'}}>
             <TableHead>
                 {headerGroups.map((headerGroup) => (
                     <TableRow {...headerGroup.getHeaderGroupProps()}>
@@ -41,7 +41,9 @@ export const Table: FC<Props> = ({ data, columns }) => {
                 {rows.map((row) => {
                     prepareRow(row)
                     return (
-                        <TableRow {...row.getRowProps()}>
+                        <tr
+                            {...row.getRowProps()}
+                            style={{ borderWidth: 1 , borderColor: 'black', marginTop: 3}}>
                             {row.cells.map((cell) => {
                                 if (cell.column.id === 'picture') {
                                     return (
@@ -83,7 +85,7 @@ export const Table: FC<Props> = ({ data, columns }) => {
                                     )
                                 }
                             })}
-                        </TableRow>
+                        </tr>
                     )
                 })}
             </TableBody>
