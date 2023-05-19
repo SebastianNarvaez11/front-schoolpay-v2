@@ -15,7 +15,7 @@ export const UsersPage: FC = () => {
 
     useEffect(() => {
         dispatch(getAllUsers())
-    }, [])
+    }, [dispatch])
 
     const columns = [
         { Header: 'Perfil', accessor: 'picture' },

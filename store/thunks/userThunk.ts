@@ -32,7 +32,7 @@ export const getAllUsers = () => async (dispatch: AppDispatch) => {
     }
 }
 
-export const createUser = (user) => async (dispatch: AppDispatch) => {
+export const createUser = (user: any) => async (dispatch: AppDispatch) => {
     dispatch(set_is_creating_user(true))
     try {
         const { data } = await backendApi.post('/users', user, {

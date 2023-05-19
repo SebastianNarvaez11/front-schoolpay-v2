@@ -18,7 +18,7 @@ export const TenantsPage: NextPage = () => {
 
     useEffect(() => {
         dispatch(getAllTenants())
-    }, [])
+    }, [dispatch])
 
     const columns = [
         { Header: 'Logo', accessor: 'picture' },

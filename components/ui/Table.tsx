@@ -7,6 +7,7 @@ import TableCell from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { IUser } from '@/interfaces/User.interface'
+import Image from 'next/image'
 
 interface IColumn {
     Header: string
@@ -25,12 +26,14 @@ export const Table: FC<Props> = ({ data, columns }) => {
         tableInstance
 
     return (
-        <MaUTable {...getTableProps()} sx={{borderCollapse: 'collapse'}}>
+        <MaUTable {...getTableProps()} sx={{ borderCollapse: 'collapse' }}>
             <TableHead>
                 {headerGroups.map((headerGroup) => (
-                    <TableRow {...headerGroup.getHeaderGroupProps()}>
+                    <TableRow
+                        {...headerGroup.getHeaderGroupProps()}
+                        key={headerGroup.id}>
                         {headerGroup.headers.map((column) => (
-                            <TableCell {...column.getHeaderProps()}>
+                            <TableCell {...column.getHeaderProps()} key={column.id}>
                                 {column.render('Header')}
                             </TableCell>
                         ))}
@@ -43,12 +46,18 @@ export const Table: FC<Props> = ({ data, columns }) => {
                     return (
                         <tr
                             {...row.getRowProps()}
-                            style={{ borderWidth: 1 , borderColor: 'black', marginTop: 3}}>
+                            key={row.index}
+                            style={{
+                                borderWidth: 1,
+                                borderColor: 'black',
+                                marginTop: 3,
+                            }}>
                             {row.cells.map((cell) => {
                                 if (cell.column.id === 'picture') {
                                     return (
                                         <TableCell
                                             {...cell.getCellProps()}
+                                            key={cell.value}
                                             sx={{
                                                 border: 0,
                                                 padding: 0,
@@ -64,7 +73,7 @@ export const Table: FC<Props> = ({ data, columns }) => {
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
                                                 }}>
-                                                <img
+                                                <Image
                                                     src={cell.value}
                                                     alt="Imagen"
                                                     style={{
@@ -79,6 +88,7 @@ export const Table: FC<Props> = ({ data, columns }) => {
                                     return (
                                         <TableCell
                                             {...cell.getCellProps()}
+                                            key={cell.value}
                                             sx={{ border: 0, padding: 0 }}>
                                             {cell.render('Cell')}
                                         </TableCell>

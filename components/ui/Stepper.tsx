@@ -53,6 +53,7 @@ export const Stepper: FC<Props> = ({ steps, stepSelect }) => {
                 }}>
                 {steps.map((item, index) => (
                     <Typography
+                        key={index}
                         align="center"
                         fontWeight={stepSelect === index ? 700 : 400}
                         sx={{

@@ -27,12 +27,12 @@ export const MainLayout: FC<Props> = ({ children, title, description }) => {
 
     useEffect(() => {
         dispatch(set_show_sidebar(matches))
-    }, [matches])
+    }, [matches, dispatch])
 
     useEffect(() => {
         const token = Cookies.get('token')
         if (token && user === undefined) dispatch(getCurrentUser(token, router))
-    }, [])
+    }, [dispatch, router, user])
 
     return (
         <>
