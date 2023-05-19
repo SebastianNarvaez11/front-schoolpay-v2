@@ -33,7 +33,9 @@ export const Table: FC<Props> = ({ data, columns }) => {
                         {...headerGroup.getHeaderGroupProps()}
                         key={headerGroup.id}>
                         {headerGroup.headers.map((column) => (
-                            <TableCell {...column.getHeaderProps()} key={column.id}>
+                            <TableCell
+                                {...column.getHeaderProps()}
+                                key={column.id}>
                                 {column.render('Header')}
                             </TableCell>
                         ))}
@@ -76,10 +78,8 @@ export const Table: FC<Props> = ({ data, columns }) => {
                                                 <Image
                                                     src={cell.value}
                                                     alt="Imagen"
-                                                    style={{
-                                                        height: 50,
-                                                        width: 50,
-                                                    }}
+                                                    height={50}
+                                                    width={50}
                                                 />
                                             </div>
                                         </TableCell>
