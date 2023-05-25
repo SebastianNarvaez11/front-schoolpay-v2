@@ -4,10 +4,12 @@ import Cookies from 'js-cookie'
 import {
     set_is_creating_user,
     set_is_loading_users,
+    set_is_removing_user,
     set_users,
 } from '../slices/userSlice'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import { IUser } from '@/interfaces/User.interface'
 
 const token = Cookies.get('token')
 
@@ -48,5 +50,16 @@ export const createUser = (user: any) => async (dispatch: AppDispatch) => {
                 duration: 5000,
             })
         }
+    }
+}
+
+export const deleteUser = (user: IUser) => async (dispatch: AppDispatch) => {
+    dispatch(set_is_removing_user(true))
+
+    try {
+        await backendApi.put(`/users/${user.idu}`, {...user, state: false} as IUser)
+    } catch (error) {
+        console.log(error);
+        
     }
 }
