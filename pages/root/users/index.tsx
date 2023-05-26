@@ -8,15 +8,16 @@ import { Loader, Table } from '../../../components/ui'
 import { IUser } from '@/interfaces/User.interface'
 import { ModalCreateUser } from '@/components/modals'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { useUsers } from '@/hooks'
 
 export const UsersPage: FC = () => {
-    const { users, isLoadingUsers } = useAppSelector((state) => state.user)
     const [showModal, setShowModal] = useState(false)
     const dispatch = useAppDispatch()
 
-    useEffect(() => {
-        dispatch(getAllUsers())
-    }, [dispatch])
+    const {users, isLoading} = useUsers('/users')
+
+    console.log(users);
+    
 
     const columns = [
         { Header: 'Perfil', accessor: 'picture' },
@@ -59,7 +60,7 @@ export const UsersPage: FC = () => {
             </Box>
 
             <Box>
-                {isLoadingUsers ? (
+                {isLoading ? (
                     <Loader
                         title="Cargando Usuarios"
                         subtitle="Esto puede tardar un poco ..."

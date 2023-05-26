@@ -8,17 +8,14 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getAllTenants } from '@/store/thunks/tenantThunk'
 import { Loader, Table } from '@/components/ui'
 import { MoonLoader } from 'react-spinners'
+import { useTenants } from '@/hooks'
 
 export const TenantsPage: NextPage = () => {
     const dispatch = useAppDispatch()
-    const { tenants, isLoadingTenants } = useAppSelector(
-        (state) => state.tenant,
-    )
-    const [showModalCreateTenant, setShowModalCreateTenant] = useState(false)
 
-    useEffect(() => {
-        dispatch(getAllTenants())
-    }, [dispatch])
+    const { tenants, isLoading } = useTenants('/tenat')
+
+    const [showModalCreateTenant, setShowModalCreateTenant] = useState(false)
 
     const columns = [
         { Header: 'Logo', accessor: 'picture' },
@@ -42,8 +39,12 @@ export const TenantsPage: NextPage = () => {
             </Box>
 
             <Box>
-                {isLoadingTenants ? (
-                    <Loader title='Cargando Tenants' subtitle='Esto puede tardar un poco ...' size={50}/>
+                {isLoading ? (
+                    <Loader
+                        title="Cargando Tenants"
+                        subtitle="Esto puede tardar un poco ..."
+                        size={50}
+                    />
                 ) : (
                     <Table data={tenants} columns={columns} />
                 )}
