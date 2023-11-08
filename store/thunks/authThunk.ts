@@ -34,9 +34,14 @@ export const loginUser = async (username: string, password: string) => {
 export const getCurrentUser =
     (token: string, router: NextRouter) => async (dispatch: AppDispatch) => {
         try {
-            const { data } = await backendApi.get<ILoginResponse>('/login/checkauth', {
-                headers: { 'x-token': token },
-            })
+            const { data } = await backendApi.get<ILoginResponse>(
+                '/login/checkauth',
+                {
+                    headers: { 'x-token': token },
+                },
+            )
+            console.log(data.user)
+
             dispatch(login(data))
         } catch (error) {
             console.log(error)

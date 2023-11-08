@@ -14,6 +14,7 @@ import { MoonLoader } from 'react-spinners'
 interface Props {
     isVisible: boolean
     setIsVisible: Dispatch<SetStateAction<boolean>>
+    getTenans: () => void
 }
 
 const steps = [
@@ -31,7 +32,11 @@ const steps = [
     },
 ]
 
-export const ModalCreateTenant: FC<Props> = ({ isVisible, setIsVisible }) => {
+export const ModalCreateTenant: FC<Props> = ({
+    isVisible,
+    setIsVisible,
+    getTenans,
+}) => {
     const { isCreatingTenant } = useAppSelector((state) => state.tenant)
     const dispatch = useAppDispatch()
     const [stepSelect, setStepSelect] = useState(0)
@@ -103,7 +108,7 @@ export const ModalCreateTenant: FC<Props> = ({ isVisible, setIsVisible }) => {
                     <Loader
                         title="Estamos creando el tenant"
                         subtitle="Esto puede tardar un poco ..."
-                        height={630}
+                        height={430}
                     />
                 ) : (
                     <>
@@ -138,6 +143,8 @@ export const ModalCreateTenant: FC<Props> = ({ isVisible, setIsVisible }) => {
                                 formOne={formOne}
                                 formTwo={formTwo}
                                 file={file}
+                                setShowModal={setIsVisible}
+                                getTenans={getTenans}
                             />
                         )}
                     </>
@@ -155,7 +162,6 @@ const style: SxProps = {
     width: '80%',
     minWidth: 300,
     maxWidth: 600,
-    minHeight: 630,
     bgcolor: 'background.paper',
     borderRadius: 3,
     boxShadow: 24,

@@ -37,11 +37,13 @@ export const LoginPage: NextPage = () => {
     const onLogin = async (username: string, password: string) => {
         setIsLoading(true)
         const { isSuccess, user } = await loginUser(username, password)
-        
+
         if (isSuccess) {
             const page_destination =
                 router.query.p?.toString() ||
                 `/${user?.rol.toLocaleLowerCase()}`
+
+            console.log(user)
 
             router.push(page_destination)
         }

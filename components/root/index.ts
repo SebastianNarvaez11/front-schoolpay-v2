@@ -1,1 +1,2 @@
-export * from './ModalCreateTenant/ModalCreateTenant'
+export * from './ModalsTenant/ModalCreateTenant'
+export * from './ModalsTenant/ModalUpdateTenant'

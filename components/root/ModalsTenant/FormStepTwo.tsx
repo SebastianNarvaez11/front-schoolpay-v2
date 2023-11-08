@@ -6,6 +6,7 @@ import { Form, useFormik } from 'formik'
 import { IFormTwo } from './forms.interfaces'
 import { MuiFileInput } from 'mui-file-input'
 import Image from 'next/image'
+import { NoImageProfile } from '@/assets/svg'
 
 interface Props {
     initialData: IFormTwo
@@ -82,23 +83,27 @@ export const FormStepTwo: FC<Props> = ({
                                 onChange={(newFile) => setFile(newFile)}
                             />
                         </Grid>
-                        {file && (
+                    </Grid>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+                        {file ? (
                             <Image
                                 alt="logo"
                                 src={URL.createObjectURL(file)}
-                                width={100}
-                                height={100}
+                                width={150}
+                                height={150}
                                 style={{ alignSelf: 'center' }}
                             />
+                        ) : (
+                            <NoImageProfile size={150} />
                         )}
-                    </Grid>
+                    </Box>
                 </Box>
                 <Box
                     display="flex"
                     sx={{
                         justifyContent: 'space-between',
-                        position: 'absolute',
-                        bottom: 20,
+                        marginTop: 4,
+                        marginBottom: 3,
                         width: '100%',
                     }}>
                     <Button

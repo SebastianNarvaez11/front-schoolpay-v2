@@ -14,6 +14,8 @@ import { useFormik } from 'formik'
 import { UserSchema } from '@/validations'
 import { MuiFileInput } from 'mui-file-input'
 import { createUser } from '@/store/thunks/userThunk'
+import Image from 'next/image'
+import { NoImageProfile } from '@/assets/svg'
 
 interface Props {
     isVisible: boolean
@@ -48,7 +50,6 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
             data.append('password', values.password1)
             data.append('rol', values.rol)
             data.append('picture', file!)
-            data.append('Idtenats', '6')
 
             dispatch(createUser(data))
         },
@@ -89,6 +90,9 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                     en el sistema y generar reportes o
                                     documentos.
                                 </Typography>
+
+                                
+
                                 <Grid container mt={1} spacing={2}>
                                     <Grid item xs={12} sm={6}>
                                         <TextField
@@ -246,6 +250,24 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             )}
                                     </Grid>
                                 </Grid>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        marginTop: 3,
+                                    }}>
+                                    {file ? (
+                                        <Image
+                                            alt="logo"
+                                            src={URL.createObjectURL(file)}
+                                            width={150}
+                                            height={150}
+                                            style={{ alignSelf: 'center' }}
+                                        />
+                                    ) : (
+                                        <NoImageProfile size={150} />
+                                    )}
+                                </Box>
                             </Box>
                             <Box
                                 display="flex"

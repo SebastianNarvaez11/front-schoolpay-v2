@@ -3,7 +3,7 @@ import { Box, Typography, Button, IconButton } from '@mui/material'
 import AddIcon from '@mui/icons-material/AddRounded'
 import { FC, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { getAllUsers, deleteUser} from '@/store/thunks/userThunk'
+import { getAllUsers, deleteUser } from '@/store/thunks/userThunk'
 import { Loader, Table } from '../../../components/ui'
 import { IUser } from '@/interfaces/User.interface'
 import { ModalCreateUser } from '@/components/modals'
@@ -14,15 +14,10 @@ export const UsersPage: FC = () => {
     const [showModal, setShowModal] = useState(false)
     const dispatch = useAppDispatch()
 
-    const {users, isLoading} = useUsers('/users')
-
-    console.log(users);
-    
+    const { users, isLoading } = useUsers('/users')
 
     const columns = [
         { Header: 'Perfil', accessor: 'picture' },
-        { Header: 'Usuario', accessor: 'username' },
-        { Header: 'Correo', accessor: 'email' },
         {
             Header: 'Nombre',
             accessor: ({ name, lastName }: IUser) => (
@@ -32,8 +27,15 @@ export const UsersPage: FC = () => {
             ),
         },
         {
+            Header: 'Tenant',
+            accessor: ({ Tenat }: IUser) => (
+                <Typography>{Tenat.businessName}</Typography>
+            ),
+        },
+        { Header: 'Rol', accessor: 'rol' },
+        {
             Header: 'Acciones',
-            accessor: (user : IUser) => (
+            accessor: (user: IUser) => (
                 <IconButton
                     onClick={() => {
                         dispatch(deleteUser(user))

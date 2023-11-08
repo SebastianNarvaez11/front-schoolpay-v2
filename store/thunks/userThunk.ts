@@ -60,6 +60,8 @@ export const deleteUser = (user: IUser) => async (dispatch: AppDispatch) => {
         await backendApi.put(`/users/${user.idu}`, {...user, state: false} as IUser)
     } catch (error) {
         console.log(error);
-        
+        toast.error('Error al eliminar usuario', {
+            duration: 5000,
+        })
     }
 }

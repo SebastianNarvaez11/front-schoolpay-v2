@@ -44,7 +44,7 @@ export const MainLayout: FC<Props> = ({ children, title, description }) => {
                 <meta name="og:description" content={description} />
             </Head>
 
-            {isLoadingUser ? (
+            {isLoadingUser || !user ? (
                 <Box
                     display="flex"
                     sx={{

@@ -14,6 +14,8 @@ interface Props {
     formTwo: IFormTwo
     back: () => void
     file: File | null
+    setShowModal: (value: boolean) => void
+    getTenans: () => void
 }
 
 export const FormStepThree: FC<Props> = ({
@@ -22,7 +24,9 @@ export const FormStepThree: FC<Props> = ({
     back,
     formOne,
     formTwo,
-    file
+    file,
+    setShowModal,
+    getTenans
 }) => {
     const dispatch = useAppDispatch()
 
@@ -51,7 +55,7 @@ export const FormStepThree: FC<Props> = ({
             data.append('password', values.password1)
             data.append('username', values.username)
 
-            dispatch(createTenant(data))
+            dispatch(createTenant(data, setShowModal, getTenans))
         },
     })
 
@@ -189,8 +193,8 @@ export const FormStepThree: FC<Props> = ({
                     display="flex"
                     sx={{
                         justifyContent: 'space-between',
-                        position: 'absolute',
-                        bottom: 20,
+                        marginTop: 4,
+                        marginBottom: 3,
                         width: '100%',
                     }}>
                     <Button

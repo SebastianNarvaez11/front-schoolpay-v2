@@ -9,8 +9,9 @@ interface Props {
     initialData: IFormOne
     setFormOne: Dispatch<SetStateAction<IFormOne>>
     next: () => void
-    back: () => void,
+    back: () => void
     closeModal: () => void
+    isUpdate?: boolean
 }
 
 export const FormStepOne: FC<Props> = ({
@@ -18,7 +19,8 @@ export const FormStepOne: FC<Props> = ({
     setFormOne,
     next,
     back,
-    closeModal
+    closeModal,
+    isUpdate = false
 }) => {
     const formik = useFormik({
         initialValues: initialData,
@@ -213,9 +215,9 @@ export const FormStepOne: FC<Props> = ({
                 <Box
                     display="flex"
                     sx={{
+                        marginTop: 4,
+                        marginBottom: 3,
                         justifyContent: 'space-between',
-                        position: 'absolute',
-                        bottom: 20,
                         width: '100%',
                     }}>
                     <Button

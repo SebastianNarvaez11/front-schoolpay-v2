@@ -23,11 +23,16 @@ export const authSlice = createSlice({
             state.isLoadingUser = false
         },
 
+        logout: (state) => {
+            state.isLoggedIn = false
+            state.user = undefined
+        },
+
         set_is_loading_user: (state, action: PayloadAction<boolean>) => {
             state.isLoadingUser = action.payload
         },
     },
 })
 
-export const { login, set_is_loading_user } = authSlice.actions
+export const { login, set_is_loading_user, logout } = authSlice.actions
 export default authSlice.reducer
