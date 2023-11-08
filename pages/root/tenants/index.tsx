@@ -10,6 +10,7 @@ import { MoonLoader } from 'react-spinners'
 import { useTenants } from '@/hooks'
 import DeleteIcon from '@mui/icons-material/RemoveCircleOutlineRounded'
 import EditIcon from '@mui/icons-material/EditOutlined'
+import { ITenant } from '@/interfaces'
 
 export const TenantsPage: NextPage = () => {
     const dispatch = useAppDispatch()
@@ -26,7 +27,7 @@ export const TenantsPage: NextPage = () => {
         { Header: 'Nit', accessor: 'nit' },
         {
             Header: 'Acciones',
-            accessor: (tenant) => (
+            accessor: (tenant: ITenant) => (
                 <Grid container>
                     <Grid item>
                         <IconButton
