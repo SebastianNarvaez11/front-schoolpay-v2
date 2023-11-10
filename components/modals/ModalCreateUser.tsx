@@ -9,13 +9,14 @@ import {
     Typography,
 } from '@mui/material'
 import { ErrorText, Loader } from '../ui'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { useFormik } from 'formik'
 import { UserSchema } from '@/validations'
 import { MuiFileInput } from 'mui-file-input'
-import { createUser } from '@/store/thunks/userThunk'
 import Image from 'next/image'
 import { NoImageProfile } from '@/assets/svg'
+import { useCreateUserMutation, useLazyGetUsersQuery } from '@/store/apis'
+import toast from 'react-hot-toast'
+import { showErrorMessage } from '@/utils'
 
 interface Props {
     isVisible: boolean
@@ -23,8 +24,8 @@ interface Props {
 }
 
 export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
-    const { isCreatingUser } = useAppSelector((state) => state.user)
-    const dispatch = useAppDispatch()
+    const [createUser, { isLoading }] = useCreateUserMutation()
+    const [refetchUsers] = useLazyGetUsersQuery()
 
     const [file, setFile] = useState<File | null>(null)
 
@@ -40,7 +41,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
             rol: '',
         },
         validationSchema: UserSchema,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             const data = new FormData()
 
             data.append('username', values.username)
@@ -51,7 +52,16 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
             data.append('rol', values.rol)
             data.append('picture', file!)
 
-            dispatch(createUser(data))
+            try {
+                await createUser(data).unwrap()
+                refetchUsers()
+                toast.success('Usuario creado con exito.', {
+                    duration: 5000,
+                })
+                setIsVisible(false)
+            } catch (error) {
+                showErrorMessage(error)
+            }
         },
     })
 
@@ -61,7 +71,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
         <Modal open={isVisible} onClose={() => setIsVisible(false)}>
             <form onSubmit={formik.handleSubmit}>
                 <Box sx={style}>
-                    {isCreatingUser ? (
+                    {isLoading ? (
                         <Loader
                             title="Estamos creando el usuario"
                             subtitle="Esto puede tardar un poco ..."
@@ -90,8 +100,6 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                     en el sistema y generar reportes o
                                     documentos.
                                 </Typography>
-
-                                
 
                                 <Grid container mt={1} spacing={2}>
                                     <Grid item xs={12} sm={6}>

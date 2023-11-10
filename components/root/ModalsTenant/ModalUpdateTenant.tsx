@@ -9,8 +9,6 @@ import { IFormOne, IFormThree, IFormTwo } from './forms.interfaces'
 import { FormStepTwo } from './FormStepTwo'
 import { FormStepThree } from './FormStepThree'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { MoonLoader } from 'react-spinners'
-import { useGetTenant } from '@/hooks'
 
 interface Props {
     isVisible: boolean
@@ -152,7 +150,6 @@ export const ModalUpdateTenant: FC<Props> = ({
                                 formTwo={formTwo}
                                 file={file}
                                 setShowModal={setIsVisible}
-                                getTenans={getTenans}
                             />
                         )}
                     </>

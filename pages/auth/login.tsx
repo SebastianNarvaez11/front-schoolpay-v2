@@ -9,19 +9,21 @@ import {
     TextField,
 } from '@mui/material'
 import { AuthLayout } from '@/components/layouts'
-import { loginUser } from '@/store/thunks/authThunk'
 import styles from '@/styles/Login.module.css'
 import Image from 'next/image'
 import { useFormik } from 'formik'
 import { LoginSchema } from '@/validations'
 import { ErrorText } from '@/components/ui'
 import { LoginImage } from '@/assets/svg'
-import { getUserPermissions, isValidToken } from '@/utils'
+import { getUserPermissions, isValidToken, showErrorMessage } from '@/utils'
+import { useLoginMutation } from '@/store/apis/authApi'
+import toast from 'react-hot-toast'
+import Cookies from 'js-cookie'
 
 export const LoginPage: NextPage = () => {
     const router = useRouter()
 
-    const [isLoading, setIsLoading] = useState(false)
+    const [login, { isLoading }] = useLoginMutation()
 
     const formik = useFormik({
         initialValues: {
@@ -29,26 +31,24 @@ export const LoginPage: NextPage = () => {
             password: '',
         },
         validationSchema: LoginSchema,
-        onSubmit: (values) => {
-            onLogin(values.username, values.password)
+        onSubmit: async (values) => {
+            try {
+                const { token, user } = await login(values).unwrap()
+
+                if (token && user) {
+                    Cookies.set('token', token)
+
+                    const page_destination =
+                        router.query.p?.toString() ||
+                        `/${user?.rol.toLocaleLowerCase()}`
+
+                    router.push(page_destination)
+                }
+            } catch (error: any) {
+                showErrorMessage(error)
+            }
         },
     })
-
-    const onLogin = async (username: string, password: string) => {
-        setIsLoading(true)
-        const { isSuccess, user } = await loginUser(username, password)
-
-        if (isSuccess) {
-            const page_destination =
-                router.query.p?.toString() ||
-                `/${user?.rol.toLocaleLowerCase()}`
-
-            console.log(user)
-
-            router.push(page_destination)
-        }
-        setIsLoading(false)
-    }
 
     const { errors, isValid, touched } = formik
 

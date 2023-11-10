@@ -1,20 +1,23 @@
 import { MainLayout } from '@/components/layouts'
-import { Box, Typography, Button, IconButton } from '@mui/material'
+import { Box, Typography, Button, IconButton, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/AddRounded'
-import { FC, useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { getAllUsers, deleteUser } from '@/store/thunks/userThunk'
+import { FC, useState } from 'react'
+import { useAppDispatch } from '@/store/hooks'
+import { deleteUser } from '@/store/thunks/userThunk'
 import { Loader, Table } from '../../../components/ui'
 import { IUser } from '@/interfaces/User.interface'
 import { ModalCreateUser } from '@/components/modals'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { useUsers } from '@/hooks'
+import { useGetUsersQuery } from '@/store/apis'
+import { MoonLoader } from 'react-spinners'
 
 export const UsersPage: FC = () => {
     const [showModal, setShowModal] = useState(false)
     const dispatch = useAppDispatch()
 
-    const { users, isLoading } = useUsers('/users')
+    const { data, isLoading, isFetching } = useGetUsersQuery(undefined, {
+        refetchOnMountOrArgChange: true,
+    })
 
     const columns = [
         { Header: 'Perfil', accessor: 'picture' },
@@ -55,10 +58,20 @@ export const UsersPage: FC = () => {
                 display="flex"
                 sx={{ justifyContent: 'space-between', width: '100%' }}>
                 <Typography>Usuarios</Typography>
-                <Button size="small" onClick={() => setShowModal(true)}>
-                    <AddIcon />
-                    Crear usuario
-                </Button>
+                <Grid container sx={{ width: 180, alignItems: 'center' }}>
+                    {isFetching && (
+                        <Grid item>
+                            <MoonLoader size={20} color="#5257F2" />
+                        </Grid>
+                    )}
+                    <Box flex={1} />
+                    <Grid item>
+                        <Button size="small" onClick={() => setShowModal(true)}>
+                            <AddIcon />
+                            Crear Usuario
+                        </Button>
+                    </Grid>
+                </Grid>
             </Box>
 
             <Box>
@@ -69,7 +82,7 @@ export const UsersPage: FC = () => {
                         size={50}
                     />
                 ) : (
-                    <Table data={users} columns={columns} />
+                    <Table data={data?.usuarios || []} columns={columns} />
                 )}
             </Box>
 

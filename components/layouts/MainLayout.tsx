@@ -8,7 +8,7 @@ import { Toaster } from 'react-hot-toast'
 import { SideBarUser, SideBarRoot, NavBar } from '../ui'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
-import { getCurrentUser } from '@/store/thunks/authThunk'
+import { useLazyCheckauthQuery } from '@/store/apis/authApi'
 
 interface Props {
     children: ReactNode
@@ -19,9 +19,10 @@ interface Props {
 export const MainLayout: FC<Props> = ({ children, title, description }) => {
     const router = useRouter()
     const dispatch = useAppDispatch()
+    const [checkauth, { isLoading }] = useLazyCheckauthQuery()
 
     const { showSideBar } = useAppSelector((state) => state.ui)
-    const { isLoadingUser, user } = useAppSelector((state) => state.auth)
+    const { user } = useAppSelector((state) => state.auth)
 
     const matches = useMediaQuery('(min-width:900px)')
 
@@ -30,9 +31,20 @@ export const MainLayout: FC<Props> = ({ children, title, description }) => {
     }, [matches, dispatch])
 
     useEffect(() => {
-        const token = Cookies.get('token')
-        if (token && user === undefined) dispatch(getCurrentUser(token, router))
-    }, [dispatch, router, user])
+        const checkAuth = async () => {
+            try {
+                const token = Cookies.get('token')
+                if (token && user === undefined) {
+                    await checkauth().unwrap()
+                }
+            } catch (error) {
+                Cookies.remove('token')
+                router.reload()
+            }
+        }
+
+        checkAuth()
+    }, [router, user])
 
     return (
         <>
@@ -44,7 +56,7 @@ export const MainLayout: FC<Props> = ({ children, title, description }) => {
                 <meta name="og:description" content={description} />
             </Head>
 
-            {isLoadingUser || !user ? (
+            {isLoading || !user ? (
                 <Box
                     display="flex"
                     sx={{

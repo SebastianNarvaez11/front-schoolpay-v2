@@ -1,17 +1,41 @@
+export interface IGetTenantsResponse {
+    tenats: ITenant[]
+}
+
 export interface ITenant {
-    address: string
-    businessName: string
-    createdAt: string
-    email: string
     idu: number
     nit: string
-    picture: string
+    businessName: string
+    address: string
     responsibleId: string
-    responsibleLastName: string
     responsibleName: string
+    responsibleLastName: string
     responsiblePhone: string
+    subdomain: string
+    email: string
     schema: string
     state: boolean
-    subdomain: string
-    updatedAt: string
+    picture: string
+    createdAt: Date
+    updatedAt: Date
+}
+
+export interface ICreateTenantResponse {
+    tenatc: ITenant
+    userC: UserC
+}
+
+interface UserC {
+    state: boolean
+    picture: string
+    idu: number
+    lastName: string
+    name: string
+    password: string
+    username: string
+    email: string
+    rol: string
+    Idtenats: number
+    updatedAt: Date
+    createdAt: Date
 }

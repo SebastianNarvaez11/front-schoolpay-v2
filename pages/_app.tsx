@@ -5,22 +5,15 @@ import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { lightTheme } from '@/themes/light'
 import { AppProvider } from '@/components/AppProvider'
-import { SWRConfig } from 'swr'
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <Provider store={store}>
-            <SWRConfig
-                value={{
-                    fetcher: (resource, init) =>
-                        fetch(resource, init).then((res) => res.json()),
-                }}>
-                <ThemeProvider theme={lightTheme}>
-                    <AppProvider>
-                        <Component {...pageProps} />
-                    </AppProvider>
-                </ThemeProvider>
-            </SWRConfig>
+            <ThemeProvider theme={lightTheme}>
+                <AppProvider>
+                    <Component {...pageProps} />
+                </AppProvider>
+            </ThemeProvider>
         </Provider>
     )
 }

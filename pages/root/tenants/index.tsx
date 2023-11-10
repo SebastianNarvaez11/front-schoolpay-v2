@@ -1,21 +1,23 @@
 import { NextPage } from 'next'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { MainLayout } from '@/components/layouts'
 import { Button, Typography, Box, IconButton, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/AddRounded'
 import { ModalCreateTenant, ModalUpdateTenant } from '@/components/root'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { Loader, Table } from '@/components/ui'
 import { MoonLoader } from 'react-spinners'
-import { useTenants } from '@/hooks'
 import DeleteIcon from '@mui/icons-material/RemoveCircleOutlineRounded'
 import EditIcon from '@mui/icons-material/EditOutlined'
 import { ITenant } from '@/interfaces'
+import { useGetTenantsQuery } from '@/store/apis'
 
 export const TenantsPage: NextPage = () => {
-    const dispatch = useAppDispatch()
-
-    const { tenants, isLoading, mutate } = useTenants()
+    const { data, isLoading, isFetching, refetch } = useGetTenantsQuery(
+        undefined,
+        {
+            refetchOnMountOrArgChange: true,
+        },
+    )
 
     const [showModalCreateTenant, setShowModalCreateTenant] = useState(false)
     const [showModalUpdateTenant, setShowModalUpdateTenant] = useState(false)
@@ -62,12 +64,22 @@ export const TenantsPage: NextPage = () => {
                 display="flex"
                 sx={{ justifyContent: 'space-between', width: '100%' }}>
                 <Typography>Tenants</Typography>
-                <Button
-                    size="small"
-                    onClick={() => setShowModalCreateTenant(true)}>
-                    <AddIcon />
-                    Crear tenant
-                </Button>
+                <Grid container sx={{ width: 180, alignItems: 'center' }}>
+                    {isFetching && (
+                        <Grid item>
+                            <MoonLoader size={20} color="#5257F2" />
+                        </Grid>
+                    )}
+                    <Box flex={1} />
+                    <Grid item>
+                        <Button
+                            size="small"
+                            onClick={() => setShowModalCreateTenant(true)}>
+                            <AddIcon />
+                            Crear tenant
+                        </Button>
+                    </Grid>
+                </Grid>
             </Box>
 
             <Box sx={{ marginTop: 2 }}>
@@ -78,21 +90,20 @@ export const TenantsPage: NextPage = () => {
                         size={50}
                     />
                 ) : (
-                    <Table data={tenants} columns={columns} />
+                    <Table data={data?.tenats || []} columns={columns} />
                 )}
             </Box>
 
             <ModalCreateTenant
                 isVisible={showModalCreateTenant}
                 setIsVisible={setShowModalCreateTenant}
-                getTenans={mutate}
             />
 
             {showModalUpdateTenant && (
                 <ModalUpdateTenant
                     isVisible={showModalUpdateTenant}
                     setIsVisible={setShowModalUpdateTenant}
-                    getTenans={mutate}
+                    getTenans={refetch}
                 />
             )}
         </MainLayout>

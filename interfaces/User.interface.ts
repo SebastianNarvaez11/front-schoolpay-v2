@@ -1,3 +1,7 @@
+export interface IGetUsersResponse {
+    usuarios: IUser[]
+}
+
 export interface IUser {
     idu: number
     username: string
@@ -14,7 +18,7 @@ export interface IUser {
     Tenat: ITenatUser
 }
 
-export interface ITenatUser {
+interface ITenatUser {
     subdomain: string
     businessName: string
     picture: string

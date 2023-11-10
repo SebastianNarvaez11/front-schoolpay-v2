@@ -8,13 +8,10 @@ import { FormStepOne } from './FormStepOne'
 import { IFormOne, IFormThree, IFormTwo } from './forms.interfaces'
 import { FormStepTwo } from './FormStepTwo'
 import { FormStepThree } from './FormStepThree'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { MoonLoader } from 'react-spinners'
 
 interface Props {
     isVisible: boolean
     setIsVisible: Dispatch<SetStateAction<boolean>>
-    getTenans: () => void
 }
 
 const steps = [
@@ -32,13 +29,7 @@ const steps = [
     },
 ]
 
-export const ModalCreateTenant: FC<Props> = ({
-    isVisible,
-    setIsVisible,
-    getTenans,
-}) => {
-    const { isCreatingTenant } = useAppSelector((state) => state.tenant)
-    const dispatch = useAppDispatch()
+export const ModalCreateTenant: FC<Props> = ({ isVisible, setIsVisible }) => {
     const [stepSelect, setStepSelect] = useState(0)
 
     const [formOne, setFormOne] = useState<IFormOne>({
@@ -104,51 +95,42 @@ export const ModalCreateTenant: FC<Props> = ({
     return (
         <Modal open={isVisible} onClose={onCloseModal}>
             <Box sx={style}>
-                {isCreatingTenant ? (
-                    <Loader
-                        title="Estamos creando el tenant"
-                        subtitle="Esto puede tardar un poco ..."
-                        height={430}
-                    />
-                ) : (
-                    <>
-                        <Box sx={{ pt: 4, pl: 4, pr: 4, pb: 2 }}>
-                            <Stepper steps={steps} stepSelect={stepSelect} />
-                        </Box>
+                <>
+                    <Box sx={{ pt: 4, pl: 4, pr: 4, pb: 2 }}>
+                        <Stepper steps={steps} stepSelect={stepSelect} />
+                    </Box>
 
-                        {stepSelect === 0 && (
-                            <FormStepOne
-                                initialData={formOne}
-                                setFormOne={setFormOne}
-                                back={onBackStep}
-                                next={onNextStep}
-                                closeModal={onCloseModal}
-                            />
-                        )}
-                        {stepSelect === 1 && (
-                            <FormStepTwo
-                                initialData={formTwo}
-                                setFormTwo={setFormTwo}
-                                setFile={setFile}
-                                back={onBackStep}
-                                next={onNextStep}
-                                file={file}
-                            />
-                        )}
-                        {stepSelect === 2 && (
-                            <FormStepThree
-                                initialData={formThree}
-                                setFormThree={setFormThree}
-                                back={onBackStep}
-                                formOne={formOne}
-                                formTwo={formTwo}
-                                file={file}
-                                setShowModal={setIsVisible}
-                                getTenans={getTenans}
-                            />
-                        )}
-                    </>
-                )}
+                    {stepSelect === 0 && (
+                        <FormStepOne
+                            initialData={formOne}
+                            setFormOne={setFormOne}
+                            back={onBackStep}
+                            next={onNextStep}
+                            closeModal={onCloseModal}
+                        />
+                    )}
+                    {stepSelect === 1 && (
+                        <FormStepTwo
+                            initialData={formTwo}
+                            setFormTwo={setFormTwo}
+                            setFile={setFile}
+                            back={onBackStep}
+                            next={onNextStep}
+                            file={file}
+                        />
+                    )}
+                    {stepSelect === 2 && (
+                        <FormStepThree
+                            initialData={formThree}
+                            setFormThree={setFormThree}
+                            back={onBackStep}
+                            formOne={formOne}
+                            formTwo={formTwo}
+                            file={file}
+                            setShowModal={setIsVisible}
+                        />
+                    )}
+                </>
             </Box>
         </Modal>
     )

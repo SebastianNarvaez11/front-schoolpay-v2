@@ -1,5 +1,6 @@
-import { ICurrentUser, ILoginResponse } from '@/interfaces'
+import { ICheckAuthResponse, ICurrentUser, ILoginResponse } from '@/interfaces'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { authApi } from '../apis/authApi'
 
 interface IStateAuth {
     isLoggedIn: boolean
@@ -17,12 +18,6 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        login: (state, action: PayloadAction<ILoginResponse>) => {
-            state.isLoggedIn = true
-            state.user = action.payload.user
-            state.isLoadingUser = false
-        },
-
         logout: (state) => {
             state.isLoggedIn = false
             state.user = undefined
@@ -32,7 +27,18 @@ export const authSlice = createSlice({
             state.isLoadingUser = action.payload
         },
     },
+    extraReducers: (builder) => {
+        //Matcher: login
+        builder.addMatcher(
+            authApi.endpoints.checkauth.matchFulfilled,
+            (state, action: PayloadAction<ICheckAuthResponse>) => {
+                state.isLoggedIn = true
+                state.user = action.payload.user
+                state.isLoadingUser = false
+            },
+        )
+    },
 })
 
-export const { login, set_is_loading_user, logout } = authSlice.actions
+export const { set_is_loading_user, logout } = authSlice.actions
 export default authSlice.reducer
