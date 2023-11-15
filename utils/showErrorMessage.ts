@@ -17,4 +17,6 @@ export const showErrorMessage = (error: any) => {
     if (error.data.msg) {
         return toast.error(error.data.msg, { duration: 5000 })
     }
+
+    return toast.error('Ocurrio un error, por favor intenta mas tarde', { duration: 5000 })
 }

@@ -2,8 +2,12 @@ import React, { FC, Dispatch, SetStateAction, useState } from 'react'
 import {
     Box,
     Button,
+    FormControl,
     Grid,
+    InputLabel,
+    MenuItem,
     Modal,
+    Select,
     SxProps,
     TextField,
     Typography,
@@ -14,9 +18,16 @@ import { UserSchema } from '@/validations'
 import { MuiFileInput } from 'mui-file-input'
 import Image from 'next/image'
 import { NoImageProfile } from '@/assets/svg'
-import { useCreateUserMutation, useLazyGetUsersQuery } from '@/store/apis'
+import {
+    useCreateUserMutation,
+    useGetTenantsOptionsQuery,
+    useGetTenantsQuery,
+    useLazyGetUsersQuery,
+} from '@/store/apis'
 import toast from 'react-hot-toast'
 import { showErrorMessage } from '@/utils'
+import SelectSearch from 'react-select'
+import { IFormCreateUser, ITenant } from '@/interfaces'
 
 interface Props {
     isVisible: boolean
@@ -26,6 +37,8 @@ interface Props {
 export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
     const [createUser, { isLoading }] = useCreateUserMutation()
     const [refetchUsers] = useLazyGetUsersQuery()
+    const { data: tenantsOptions, isLoading: isLoadingTenant } =
+        useGetTenantsOptionsQuery()
 
     const [file, setFile] = useState<File | null>(null)
 
@@ -37,9 +50,9 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
             email: '',
             password1: '',
             password2: '',
-            picture: '',
             rol: '',
-        },
+            Idtenats: undefined,
+        } as IFormCreateUser,
         validationSchema: UserSchema,
         onSubmit: async (values) => {
             const data = new FormData()
@@ -50,7 +63,10 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
             data.append('email', values.email)
             data.append('password', values.password1)
             data.append('rol', values.rol)
-            data.append('picture', file!)
+            data.append('image', file!)
+            if (values.Idtenats) {
+                data.append('Idtenats', values?.Idtenats?.value!)
+            }
 
             try {
                 await createUser(data).unwrap()
@@ -65,7 +81,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
         },
     })
 
-    const { errors, isValid, touched } = formik
+    const { errors, isValid, touched, values } = formik
 
     return (
         <Modal open={isVisible} onClose={() => setIsVisible(false)}>
@@ -109,7 +125,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             label="Usuario"
                                             variant="outlined"
                                             name="username"
-                                            value={formik.values.username}
+                                            value={values.username}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={Boolean(
@@ -131,7 +147,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             label="Nombres"
                                             variant="outlined"
                                             name="name"
-                                            value={formik.values.name}
+                                            value={values.name}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={Boolean(
@@ -149,7 +165,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             label="Apellidos"
                                             variant="outlined"
                                             name="lastName"
-                                            value={formik.values.lastName}
+                                            value={values.lastName}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={Boolean(
@@ -165,19 +181,31 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             )}
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            label="Rol"
-                                            variant="outlined"
-                                            name="rol"
-                                            value={formik.values.rol}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={Boolean(
-                                                errors.rol && touched.rol,
-                                            )}
-                                        />
+                                        <FormControl fullWidth size="small">
+                                            <InputLabel id="demo-simple-select-label">
+                                                Rol
+                                            </InputLabel>
+                                            <Select
+                                                size="small"
+                                                name="rol"
+                                                value={values.rol}
+                                                label="Rol"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={Boolean(
+                                                    errors.rol && touched.rol,
+                                                )}>
+                                                <MenuItem value={'ROOT'}>
+                                                    Root
+                                                </MenuItem>
+                                                <MenuItem value={'ADMIN'}>
+                                                    Administrador
+                                                </MenuItem>
+                                                <MenuItem value={'ASSISTANT'}>
+                                                    Asistente
+                                                </MenuItem>
+                                            </Select>
+                                        </FormControl>
                                         {errors.rol && touched.rol && (
                                             <ErrorText text={errors.rol} />
                                         )}
@@ -189,7 +217,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             label="Email"
                                             variant="outlined"
                                             name="email"
-                                            value={formik.values.email}
+                                            value={values.email}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={Boolean(
@@ -200,6 +228,42 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             <ErrorText text={errors.email} />
                                         )}
                                     </Grid>
+                                    {values.rol !== 'ROOT' && (
+                                        <Grid item xs={12} sm={6}>
+                                            <SelectSearch
+                                                placeholder="Tenant"
+                                                value={values.Idtenats}
+                                                name="Idtenats"
+                                                onChange={(item) =>
+                                                    formik.setFieldValue(
+                                                        'Idtenats',
+                                                        item,
+                                                    )
+                                                }
+                                                onBlur={(v) =>
+                                                    formik.setFieldTouched(
+                                                        'Idtenats',
+                                                    )
+                                                }
+                                                getOptionLabel={(v) =>
+                                                    v?.label || ''
+                                                }
+                                                getOptionValue={(v) =>
+                                                    v?.value || ''
+                                                }
+                                                options={tenantsOptions || []}
+                                                isLoading={isLoadingTenant}
+                                            />
+                                            {errors.Idtenats &&
+                                                touched.Idtenats && (
+                                                    <ErrorText
+                                                        text={
+                                                            'El tenant es obligatorio'
+                                                        }
+                                                    />
+                                                )}
+                                        </Grid>
+                                    )}
                                     <Grid item xs={12}>
                                         <MuiFileInput
                                             placeholder="Selecciona una foto"
@@ -219,7 +283,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             variant="outlined"
                                             name="password1"
                                             type="password"
-                                            value={formik.values.password1}
+                                            value={values.password1}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={Boolean(
@@ -242,7 +306,7 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             variant="outlined"
                                             name="password2"
                                             type="password"
-                                            value={formik.values.password2}
+                                            value={values.password2}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={Boolean(

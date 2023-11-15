@@ -32,7 +32,7 @@ export const UsersPage: FC = () => {
         {
             Header: 'Tenant',
             accessor: ({ Tenat }: IUser) => (
-                <Typography>{Tenat.businessName}</Typography>
+                <Typography>{Tenat?.businessName}</Typography>
             ),
         },
         { Header: 'Rol', accessor: 'rol' },

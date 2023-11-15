@@ -1,6 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { baseQueryWithReauth } from './baseQuery'
-import { ICreateTenantResponse, IGetTenantsResponse } from '@/interfaces'
+import {
+    ICreateTenantResponse,
+    IGetTenantsResponse,
+    ITenantOption,
+} from '@/interfaces'
 
 export const tenantApi = createApi({
     reducerPath: 'tenant_api',
@@ -14,9 +18,35 @@ export const tenantApi = createApi({
             query: (tenantData) => ({
                 url: '/api/tenat',
                 method: 'POST',
-                body: tenantData,
                 formData: true,
+                data: tenantData,
             }),
+        }),
+
+        getTenantById: builder.mutation<ICreateTenantResponse, number>({
+            query: (idu) => ({
+                url: '/api/tenat/filterTenat',
+                method: 'GET',
+                body: { idu },
+            }),
+        }),
+
+        getTenantsOptions: builder.query<ITenantOption[], void>({
+            query: () => '/api/tenat',
+            transformResponse: (
+                baseQueryReturnValue: IGetTenantsResponse,
+                meta,
+                arg,
+            ) => {
+                const options: ITenantOption[] =
+                    baseQueryReturnValue.tenats.map(
+                        ({ businessName, idu }) => ({
+                            label: businessName,
+                            value: String(idu),
+                        }),
+                    )
+                return options
+            },
         }),
     }),
 })
@@ -25,4 +55,6 @@ export const {
     useGetTenantsQuery,
     useLazyGetTenantsQuery,
     useCreateTenantMutation,
+    useGetTenantByIdMutation,
+    useGetTenantsOptionsQuery,
 } = tenantApi

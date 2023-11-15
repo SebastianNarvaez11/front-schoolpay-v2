@@ -39,3 +39,8 @@ interface UserC {
     updatedAt: Date
     createdAt: Date
 }
+
+export interface ITenantOption {
+    label: string
+    value: string
+}

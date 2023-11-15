@@ -31,6 +31,20 @@ export const UserSchema = Yup.object().shape({
         .email('Ingrese un email valido.')
         .required('El email es obligatorio.'),
 
+    rol: Yup.string().required('El rol es obligatorio.'),
+
+    Idtenats: Yup.object().when('rol', {
+        is: (rol: string) => rol !== 'ROOT',
+        then: (schema) => schema.required('Tenant is required'),
+    }),
+
+    // Idtenats: Yup.object().shape({
+    //     value: Yup.string().when('rol', {
+    //         is: (rol: string) => console.log(rol),
+    //         then: (schema) => schema.required('Tenant is required'),
+    //     }),
+    // }),
+
     password1: Yup.string().required('La contraseña es obligatoria'),
     password2: Yup.string()
         .oneOf([Yup.ref('password1'), null!], 'Las contraseñas no coinciden.')

@@ -9,7 +9,7 @@ import { MoonLoader } from 'react-spinners'
 import DeleteIcon from '@mui/icons-material/RemoveCircleOutlineRounded'
 import EditIcon from '@mui/icons-material/EditOutlined'
 import { ITenant } from '@/interfaces'
-import { useGetTenantsQuery } from '@/store/apis'
+import { useGetTenantByIdMutation, useGetTenantsQuery } from '@/store/apis'
 
 export const TenantsPage: NextPage = () => {
     const { data, isLoading, isFetching, refetch } = useGetTenantsQuery(
@@ -18,6 +18,9 @@ export const TenantsPage: NextPage = () => {
             refetchOnMountOrArgChange: true,
         },
     )
+    const [getTenat, { data: tenat }] = useGetTenantByIdMutation()
+
+    console.log(tenat)
 
     const [showModalCreateTenant, setShowModalCreateTenant] = useState(false)
     const [showModalUpdateTenant, setShowModalUpdateTenant] = useState(false)
@@ -45,7 +48,7 @@ export const TenantsPage: NextPage = () => {
                     <Grid item>
                         <IconButton
                             onClick={() => {
-                                setShowModalUpdateTenant(true)
+                                getTenat(2)
                             }}
                             sx={{
                                 marginTop: 1,
