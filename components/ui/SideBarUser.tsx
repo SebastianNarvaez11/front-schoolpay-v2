@@ -49,16 +49,20 @@ export const SideBarUser = () => {
                 </Link>
 
                 {user?.rol === 'ADMIN' && (
-                    <IconButton
-                        aria-label="Usuarios"
-                        sx={{
-                            color:
-                                asPath === '/admin/users' ? '#fff' : '#7478f5',
-                            width: 50,
-                            margin: 1,
-                        }}>
-                        <UserIcon fontSize="large" />
-                    </IconButton>
+                    <Link href={'/admin/users'}>
+                        <IconButton
+                            aria-label="Usuarios"
+                            sx={{
+                                color:
+                                    asPath === '/admin/users'
+                                        ? '#fff'
+                                        : '#7478f5',
+                                width: 50,
+                                margin: 1,
+                            }}>
+                            <UserIcon fontSize="large" />
+                        </IconButton>
+                    </Link>
                 )}
 
                 <IconButton

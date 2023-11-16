@@ -7,6 +7,9 @@ import { IFormOne, IFormThree, IFormTwo } from './forms.interfaces'
 import { useCreateTenantMutation, useLazyGetTenantsQuery } from '@/store/apis'
 import toast from 'react-hot-toast'
 import { showErrorMessage } from '@/utils'
+import { MuiFileInput } from 'mui-file-input'
+import Image from 'next/image'
+import { NoImageProfile } from '@/assets/svg'
 
 interface Props {
     initialData: IFormThree
@@ -16,6 +19,8 @@ interface Props {
     back: () => void
     file: File | null
     setShowModal: (value: boolean) => void
+    userImage?: File | null
+    setUserImage?: Dispatch<SetStateAction<File | null>>
 }
 
 export const FormStepThree: FC<Props> = ({
@@ -26,6 +31,8 @@ export const FormStepThree: FC<Props> = ({
     formTwo,
     file,
     setShowModal,
+    userImage,
+    setUserImage,
 }) => {
     const [refetchTenants] = useLazyGetTenantsQuery()
     const [createTenant, { isLoading }] = useCreateTenantMutation()
@@ -54,6 +61,7 @@ export const FormStepThree: FC<Props> = ({
             data.append('name', values.name)
             data.append('password', values.password1)
             data.append('username', values.username)
+            data.append('imageUser', userImage!)
 
             try {
                 await createTenant(data).unwrap()
@@ -167,6 +175,17 @@ export const FormStepThree: FC<Props> = ({
                                     <ErrorText text={errors.email} />
                                 )}
                             </Grid>
+                            <Grid item xs={12}>
+                                <MuiFileInput
+                                    placeholder="Selecciona una foto"
+                                    fullWidth
+                                    size="small"
+                                    value={userImage}
+                                    onChange={(newFile) =>
+                                        setUserImage && setUserImage(newFile)
+                                    }
+                                />
+                            </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     fullWidth
@@ -206,6 +225,24 @@ export const FormStepThree: FC<Props> = ({
                                 )}
                             </Grid>
                         </Grid>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                marginTop: 3,
+                            }}>
+                            {userImage ? (
+                                <Image
+                                    alt="logo"
+                                    src={URL.createObjectURL(userImage)}
+                                    width={150}
+                                    height={150}
+                                    style={{ alignSelf: 'center' }}
+                                />
+                            ) : (
+                                <NoImageProfile size={150} />
+                            )}
+                        </Box>
                     </Box>
                     <Box
                         display="flex"

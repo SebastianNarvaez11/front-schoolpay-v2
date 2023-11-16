@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useGetUsersQuery } from '@/store/apis'
 import { MoonLoader } from 'react-spinners'
 
-export const UsersPage: FC = () => {
+export const UsersPageAdmin: FC = () => {
     const [showModal, setShowModal] = useState(false)
     const dispatch = useAppDispatch()
 
@@ -94,4 +94,4 @@ export const UsersPage: FC = () => {
     )
 }
 
-export default UsersPage
+export default UsersPageAdmin

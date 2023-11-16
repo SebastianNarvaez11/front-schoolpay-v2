@@ -7,7 +7,7 @@ const validateEmail = (value: any) => {
     return regex.test(value)
 }
 
-export const UserSchema = Yup.object().shape({
+export const RootCreateUserSchema = Yup.object().shape({
     username: Yup.string()
         .min(3, 'El nombre de usuario debe tener minimo 3 caracteres.')
         .required('El nombre de usuario es obligatorio.'),
@@ -38,12 +38,37 @@ export const UserSchema = Yup.object().shape({
         then: (schema) => schema.required('Tenant is required'),
     }),
 
-    // Idtenats: Yup.object().shape({
-    //     value: Yup.string().when('rol', {
-    //         is: (rol: string) => console.log(rol),
-    //         then: (schema) => schema.required('Tenant is required'),
-    //     }),
-    // }),
+    password1: Yup.string().required('La contraseña es obligatoria'),
+    password2: Yup.string()
+        .oneOf([Yup.ref('password1'), null!], 'Las contraseñas no coinciden.')
+        .required('Repita la contraseña.'),
+})
+
+export const AdminCreateUserSchema = Yup.object().shape({
+    username: Yup.string()
+        .min(3, 'El nombre de usuario debe tener minimo 3 caracteres.')
+        .required('El nombre de usuario es obligatorio.'),
+
+    name: Yup.string()
+        .test('alphabets', 'El nombre solo debe contener letras.', lettersOnly)
+        .min(2, 'El nombre debe tener minimo 2 caracteres.')
+        .required('El nombre es obligatorio.'),
+
+    lastName: Yup.string()
+        .test(
+            'alphabets',
+            'El apellido solo debe contener letras.',
+            lettersOnly,
+        )
+        .min(2, 'El apellido debe tener minimo 2 caracteres.')
+        .required('El apellido es obligatorio.'),
+
+    email: Yup.string()
+        .test('Validate Emil', 'Ingrese un email valido. ', validateEmail)
+        .email('Ingrese un email valido.')
+        .required('El email es obligatorio.'),
+
+    rol: Yup.string().required('El rol es obligatorio.'),
 
     password1: Yup.string().required('La contraseña es obligatoria'),
     password2: Yup.string()

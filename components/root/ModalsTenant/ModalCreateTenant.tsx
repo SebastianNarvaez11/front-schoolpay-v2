@@ -47,6 +47,7 @@ export const ModalCreateTenant: FC<Props> = ({ isVisible, setIsVisible }) => {
         subdomain: '',
     })
     const [file, setFile] = useState<File | null>(null)
+    const [userImage, setUserImage] = useState<File | null>(null)
 
     const [formThree, setFormThree] = useState<IFormThree>({
         username: '',
@@ -90,6 +91,7 @@ export const ModalCreateTenant: FC<Props> = ({ isVisible, setIsVisible }) => {
         setIsVisible(false)
         setStepSelect(0)
         setFile(null)
+        setUserImage(null)
     }
 
     return (
@@ -128,6 +130,8 @@ export const ModalCreateTenant: FC<Props> = ({ isVisible, setIsVisible }) => {
                             formTwo={formTwo}
                             file={file}
                             setShowModal={setIsVisible}
+                            userImage={userImage}
+                            setUserImage={setUserImage}
                         />
                     )}
                 </>

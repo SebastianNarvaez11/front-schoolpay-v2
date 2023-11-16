@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import { ErrorText, Loader } from '../ui'
 import { useFormik } from 'formik'
-import { UserSchema } from '@/validations'
+import { AdminCreateUserSchema, RootCreateUserSchema } from '@/validations'
 import { MuiFileInput } from 'mui-file-input'
 import Image from 'next/image'
 import { NoImageProfile } from '@/assets/svg'
@@ -28,6 +28,7 @@ import toast from 'react-hot-toast'
 import { showErrorMessage } from '@/utils'
 import SelectSearch from 'react-select'
 import { IFormCreateUser, ITenant } from '@/interfaces'
+import { useAppSelector } from '@/store/hooks'
 
 interface Props {
     isVisible: boolean
@@ -35,6 +36,7 @@ interface Props {
 }
 
 export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
+    const { user } = useAppSelector((state) => state.auth)
     const [createUser, { isLoading }] = useCreateUserMutation()
     const [refetchUsers] = useLazyGetUsersQuery()
     const { data: tenantsOptions, isLoading: isLoadingTenant } =
@@ -53,7 +55,8 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
             rol: '',
             Idtenats: undefined,
         } as IFormCreateUser,
-        validationSchema: UserSchema,
+        validationSchema:
+            user?.rol === 'ROOT' ? RootCreateUserSchema : AdminCreateUserSchema,
         onSubmit: async (values) => {
             const data = new FormData()
 
@@ -195,9 +198,11 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                                 error={Boolean(
                                                     errors.rol && touched.rol,
                                                 )}>
-                                                <MenuItem value={'ROOT'}>
-                                                    Root
-                                                </MenuItem>
+                                                {user?.rol === 'ROOT' && (
+                                                    <MenuItem value={'ROOT'}>
+                                                        Root
+                                                    </MenuItem>
+                                                )}
                                                 <MenuItem value={'ADMIN'}>
                                                     Administrador
                                                 </MenuItem>
@@ -228,42 +233,45 @@ export const ModalCreateUser: FC<Props> = ({ isVisible, setIsVisible }) => {
                                             <ErrorText text={errors.email} />
                                         )}
                                     </Grid>
-                                    {values.rol !== 'ROOT' && (
-                                        <Grid item xs={12} sm={6}>
-                                            <SelectSearch
-                                                placeholder="Tenant"
-                                                value={values.Idtenats}
-                                                name="Idtenats"
-                                                onChange={(item) =>
-                                                    formik.setFieldValue(
-                                                        'Idtenats',
-                                                        item,
-                                                    )
-                                                }
-                                                onBlur={(v) =>
-                                                    formik.setFieldTouched(
-                                                        'Idtenats',
-                                                    )
-                                                }
-                                                getOptionLabel={(v) =>
-                                                    v?.label || ''
-                                                }
-                                                getOptionValue={(v) =>
-                                                    v?.value || ''
-                                                }
-                                                options={tenantsOptions || []}
-                                                isLoading={isLoadingTenant}
-                                            />
-                                            {errors.Idtenats &&
-                                                touched.Idtenats && (
-                                                    <ErrorText
-                                                        text={
-                                                            'El tenant es obligatorio'
-                                                        }
-                                                    />
-                                                )}
-                                        </Grid>
-                                    )}
+                                    {values.rol !== 'ROOT' &&
+                                        user?.rol === 'ROOT' && (
+                                            <Grid item xs={12} sm={6}>
+                                                <SelectSearch
+                                                    placeholder="Tenant"
+                                                    value={values.Idtenats}
+                                                    name="Idtenats"
+                                                    onChange={(item) =>
+                                                        formik.setFieldValue(
+                                                            'Idtenats',
+                                                            item,
+                                                        )
+                                                    }
+                                                    onBlur={(v) =>
+                                                        formik.setFieldTouched(
+                                                            'Idtenats',
+                                                        )
+                                                    }
+                                                    getOptionLabel={(v) =>
+                                                        v?.label || ''
+                                                    }
+                                                    getOptionValue={(v) =>
+                                                        v?.value || ''
+                                                    }
+                                                    options={
+                                                        tenantsOptions || []
+                                                    }
+                                                    isLoading={isLoadingTenant}
+                                                />
+                                                {errors.Idtenats &&
+                                                    touched.Idtenats && (
+                                                        <ErrorText
+                                                            text={
+                                                                'El tenant es obligatorio'
+                                                            }
+                                                        />
+                                                    )}
+                                            </Grid>
+                                        )}
                                     <Grid item xs={12}>
                                         <MuiFileInput
                                             placeholder="Selecciona una foto"

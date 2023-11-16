@@ -18,9 +18,7 @@ export const TenantsPage: NextPage = () => {
             refetchOnMountOrArgChange: true,
         },
     )
-    const [getTenat, { data: tenat }] = useGetTenantByIdMutation()
-
-    console.log(tenat)
+    const [getTenat] = useGetTenantByIdMutation()
 
     const [showModalCreateTenant, setShowModalCreateTenant] = useState(false)
     const [showModalUpdateTenant, setShowModalUpdateTenant] = useState(false)
@@ -48,7 +46,7 @@ export const TenantsPage: NextPage = () => {
                     <Grid item>
                         <IconButton
                             onClick={() => {
-                                getTenat(2)
+                                getTenat(tenant.idu)
                             }}
                             sx={{
                                 marginTop: 1,

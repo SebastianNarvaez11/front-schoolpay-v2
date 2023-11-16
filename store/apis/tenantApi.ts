@@ -19,14 +19,14 @@ export const tenantApi = createApi({
                 url: '/api/tenat',
                 method: 'POST',
                 formData: true,
-                data: tenantData,
+                body: tenantData,
             }),
         }),
 
         getTenantById: builder.mutation<ICreateTenantResponse, number>({
             query: (idu) => ({
                 url: '/api/tenat/filterTenat',
-                method: 'GET',
+                method: 'POST',
                 body: { idu },
             }),
         }),

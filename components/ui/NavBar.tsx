@@ -6,6 +6,8 @@ import LogoutIcon from '@mui/icons-material/LogoutRounded'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { logout } from '@/store/slices/authSlice'
+import Image from 'next/image'
+import { NoImageProfile } from '@/assets/svg'
 
 export const NavBar = () => {
     const router = useRouter()
@@ -25,7 +27,7 @@ export const NavBar = () => {
         <Box
             display="flex"
             sx={{
-                height: 40,
+                height: 50,
                 alignItems: 'center',
                 paddingRight: 5,
                 paddingLeft: 3,
@@ -40,6 +42,30 @@ export const NavBar = () => {
             <Typography>
                 {user?.name} {user?.lastName}
             </Typography>
+
+            {user?.picture ? (
+                <Image
+                    alt="logo"
+                    src={user.picture}
+                    width={35}
+                    height={35}
+                    style={{
+                        justifySelf: 'center',
+                        borderRadius: 20,
+                        marginLeft: 10,
+                        marginRight: 20,
+                    }}
+                />
+            ) : (
+                <Box
+                    style={{
+                        borderRadius: 20,
+                        marginLeft: 10,
+                        marginRight: 20,
+                    }}>
+                    <NoImageProfile size={35} />
+                </Box>
+            )}
 
             <IconButton onClick={() => handleLogout()}>
                 <LogoutIcon color="primary" />
